@@ -73,6 +73,7 @@ type Decoder struct {
 	StaticMap    map[string]string `yaml:"static_map"`
 	Regexps      []string          `yaml:"regexps"`
 	AllowUnknown bool              `yaml:"allow_unknown"`
+	LruCacheSize int               `yaml:"lru_cache_size"`
 }
 
 // HistogramBucketType is an enum to define how to interpret histogram

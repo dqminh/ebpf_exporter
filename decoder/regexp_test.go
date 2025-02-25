@@ -54,3 +54,19 @@ func TestRegexpDecoder(t *testing.T) {
 		}
 	}
 }
+
+func TestRegexpDecoderWithLru(t *testing.T) {
+	d := &Regexp{}
+	input := []byte("systemd-bananad")
+	expectedOutput := []byte("systemd")
+	out, err := d.Decode(input, config.Decoder{Regexps: []string{"^(systemd).*$", "^syslog-ng$"}, LruCacheSize: 100})
+	if err != nil {
+		t.Errorf("Error decoding %s: %v", input, err)
+	}
+	if !bytes.Equal(out, expectedOutput) {
+		t.Errorf("Expected %s, got %s", expectedOutput, out)
+	}
+	if d.outputCache.Len() != 1 || d.outputCache.Keys()[0] != string(input) {
+		t.Errorf("Error decoding %s: unexpected lru keys %v", input, d.outputCache.Keys())
+	}
+}
